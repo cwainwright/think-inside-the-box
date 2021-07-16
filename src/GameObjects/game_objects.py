@@ -227,8 +227,8 @@ class Room:
         with room_templates_filepath.open('r', encoding='utf8') as room_templates:
             template = random.choice(json.load(room_templates)[self.room_type])["layout"]
         # Rotate template (if necessary) [0, 90, 180, 270]
-        for i in range(rotation//90):
-            zip(*template[::-1])
+        for _ in range(rotation//90):
+           template = list(zip(*template[::-1]))
         #Map template spaces to Tiles in Room
         for y_coord in template:
             row = []
@@ -323,10 +323,8 @@ class Entity:
     def __init__(self, x_location: int, y_location: int):
         self.location = [x_location, y_location]
         self.tile_location = [10-y_location, x_location]
-        with open(path.join(
-            "GameObjects",
-            "object_representation.json"
-        ), "r", encoding="utf8") as object_representation_file:
+        object_representation_filepath=Path(__file__).parent / 'object_representation.json'
+        with object_representation_filepath.open('r', encoding='utf8') as object_representation_file:
             self.object_representation_json = json.load(object_representation_file)
         self.representation = ""
 
