@@ -291,8 +291,7 @@ class Room:
                     right = self.move_entity("right", "player")
                     print(self.term.center("right"))
                 if keystroke.name == "e":
-                    print("you pressed E!")
-                    break
+                    print("e was pressed")
                 player_location_x, player_location_y = self.entity_dict["player"].get_location()
                 if player_location_x in [0, 10] or player_location_y in [0, 10]:
                     return [{up:"up", left:"left", down:"down", right:"right"}[True], self.entity_dict["player"]]
@@ -304,6 +303,7 @@ class Room:
         location = entity.get_location()
         x_translated = int(location[0]+translation[0])
         y_translated = int(location[1]+translation[1])
+        #Detect entities in translation space
         for entities in self.entity_dict.values():
             space_vacancy = not [x_translated, y_translated] == entities.get_location()
         print(self.term.center(entity.get_location()))

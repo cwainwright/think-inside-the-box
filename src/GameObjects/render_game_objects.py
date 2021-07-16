@@ -23,7 +23,7 @@ for line in world.world_matrix:
     for item in line:
         display_room_line.append(str(item))
     print(display_room_line)
-world.active_room.add_entity("player", Player(5, 1))
+world.active_room.add_entity("player", Player(1, 4))
 room_directions = {"up":(-1, 0),"left":(0, -1),"down":(1, 0),"right":(0, 1)}
 player_directions = {"up":(5, 9),"left":(9, 5),"down":(5, 1),"right":(1, 5)}
 not_end = True
