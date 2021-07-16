@@ -15,7 +15,7 @@ def main():
     manager_thread = threading.Thread(target=manager)
     manager_thread.start()
 
-    with term.cbreak(), term.hidden_cursor(), term.location():
+    with term.raw(), term.hidden_cursor(), term.location(), term.fullscreen():
         while manager_thread.is_alive():
             inp = term.inkey(1 / FPS)
             if inp != '':
