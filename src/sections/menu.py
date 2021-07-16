@@ -144,11 +144,10 @@ class Menu(GameSection):
         first_option_line = (term.height - len(menu_list)) // 2
         echo(term.move_y(first_option_line) + "\n")
 
-        echo(background_colour)
-
         for index, item in enumerate(menu_list):
+
             if index == self.selected:
-                echo(term.center(term.darkblue_reverse(f"{index+1}. {item}")).rstrip() + "\n")
+                echo(background_colour + term.center(term.darkblue_reverse(f"{index+1}. {item}")).rstrip() + "\n")
             else:
                 echo(background_colour + term.center(f"{index+1}. {item}").rstrip() + "\n")
 
