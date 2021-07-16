@@ -2,7 +2,6 @@
 import json
 import random
 from copy import deepcopy
-from os import path
 from pathlib import Path
 
 
@@ -228,7 +227,7 @@ class Room:
             template = random.choice(json.load(room_templates)[self.room_type])["layout"]
         # Rotate template (if necessary) [0, 90, 180, 270]
         for _ in range(rotation//90):
-           template = list(zip(*template[::-1]))
+            template = list(zip(*template[::-1]))
         #Map template spaces to Tiles in Room
         for y_coord in template:
             row = []
