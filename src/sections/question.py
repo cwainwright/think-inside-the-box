@@ -1,20 +1,21 @@
 import time
-from queue import Queue
-from typing import Optional
 from enum import IntEnum
 from functools import partial
-from string import ascii_uppercase
+from pathlib import Path
+from queue import Queue
 from random import choice
+from string import ascii_uppercase
+from typing import Optional
 
 from blessed import Terminal
 from blessed.keyboard import Keystroke
 from pyfiglet import Figlet
 
-from sections.base import GameSection
-from util import question
+from src.sections.base import GameSection
+from src.util import question
 
 # Constants
-QUESTION_PATH = 'res/questions.json'
+QUESTION_PATH = Path(__file__).parent / '..' / 'res/questions.json'
 TYPING_SPEED = 50
 echo = partial(print, end='', flush=True)
 

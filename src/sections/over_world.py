@@ -4,7 +4,7 @@ from typing import Optional
 from blessed import Terminal
 from blessed.keyboard import Keystroke
 
-from base import GameSection
+from src.sections.base import GameSection
 
 
 class OverWorld(GameSection):
