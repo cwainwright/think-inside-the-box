@@ -133,22 +133,24 @@ class Menu(GameSection):
         return False
 
     def run_rendering(self, term: Terminal, echo: Callable[[str], None]):
+        background_colour = term.black_on_skyblue
+
         # add the background colour and title
-        echo(f"{term.home}{term.black_on_skyblue}{term.clear}")
-        echo(term.center(term.bold_underline(self.behaviour.title)).rstrip())
+        echo(f"{term.home}{background_colour}{term.clear}")
+        echo(term.center(term.darkblue_underline(self.behaviour.title)).rstrip())
 
         # take the len of the list into account for y positioning
         menu_list = self.behaviour.menu_list
         first_option_line = (term.height - len(menu_list)) // 2
         echo(term.move_y(first_option_line) + "\n")
 
-        echo(term.black_on_skyblue)
+        echo(background_colour)
 
         for index, item in enumerate(menu_list):
             if index == self.selected:
                 echo(term.center(term.darkblue_reverse(f"{index+1}. {item}")).rstrip() + "\n")
             else:
-                echo(term.center(f"{index+1}. {item}").rstrip() + "\n")
+                echo(background_colour + term.center(f"{index+1}. {item}").rstrip() + "\n")
 
         echo(term.normal)
 
