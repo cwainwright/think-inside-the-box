@@ -1,12 +1,13 @@
 import queue
 from abc import ABC, abstractmethod
 from functools import partial
-from typing import Optional, Callable
+from typing import Callable, Optional
 
 from blessed import Terminal
 from blessed.keyboard import Keystroke
 
 echo = partial(print, end='', flush=True)
+
 
 class GameSection(ABC):
     """The abstraction of a section of the game to be run.
@@ -20,12 +21,14 @@ class GameSection(ABC):
     Useful methods provided:
         - stop() which should be called to indicate this game section should stop (e.g. you encounter an NPC on the over world)
     """
+
     def __init__(self, in_queue: queue.Queue):
         self._in_queue = in_queue
         self._running = True
 
     def __call__(self, terminal, start_data):
-        self.handle_start(start_data)
+        if self.handle_start(start_data):
+            self.run_rendering(terminal, echo)
 
         while self._running:
             inp = self._get_input()
@@ -36,15 +39,15 @@ class GameSection(ABC):
 
     def stop(self):
         """Call to cease the running of the game section after a potential final render"""
-        self._running = True
+        self._running = False
 
     @abstractmethod
-    def handle_start(self, start_data: object):
+    def handle_start(self, start_data: object) -> bool:
         """Handle any start data passed when the game section is started"""
         pass
 
     @abstractmethod
-    def run_processing(self, inp: Optional[Keystroke]) -> bool:
+    def run_processing(self, inp: Optional[Keystroke], first_loop: bool) -> bool:
         """Handle any processing for the game section
 
         The input is either None (for no user input this cycle), or the keystroke the user made.

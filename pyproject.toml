@@ -7,6 +7,8 @@ license = "MIT"
 
 [tool.poetry.dependencies]
 python = "3.9.*"
+blessed = "^1.18.1"
+pyfiglet = "^0.8.post1"
 
 [tool.poetry.dev-dependencies]
 # Base tools
