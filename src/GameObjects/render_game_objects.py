@@ -1,7 +1,6 @@
 '''Experimental script for testing game_objects in a visual environment'''
 from blessed import Terminal
-from game_objects import World, NPC, Player
-from random import choice
+from game_objects import World, Player
 
 maze_matrix_test = [
     [False, False, False, False, False, False, False, False, True,  False],
@@ -40,7 +39,3 @@ while not_end:
     print(world.active_room)
     world.active_room.add_entity("player", player)
     world.active_room.entity_dict["player"].update_location(player_x, player_y)
-    placements = choice([(5, 1), (9, 5), (5, 9), (1, 5)])
-    world.active_room.add_entity(
-        "Enemy"+str(placements), NPC(placements[0], placements[1])
-    )

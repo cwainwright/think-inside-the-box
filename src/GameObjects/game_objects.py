@@ -7,6 +7,7 @@ from pathlib import Path
 
 
 def four_way_junction_matcher(entrances_exits):
+    '''Check existence of 4-way-junction'''
     if entrances_exits.count(True) == 4:
         return {
             "type":"4-way-junction",
@@ -16,6 +17,7 @@ def four_way_junction_matcher(entrances_exits):
     return None
 
 def three_way_junction_matcher(entrances_exits):
+    '''Check existence and rotation of 3-way-junction'''
     if entrances_exits.count(True) != 3:
         return None
 
@@ -244,6 +246,11 @@ class Room:
                 else:
                     row.append(str(Space()))
             self.tiles.append(row)
+        placements = random.choice([(5, 1), (9, 5), (5, 9), (1, 5)])
+        self.add_entity(
+            "Enemy"+str(placements), 
+            NPC(placements[0], placements[1])
+        )
 
     def add_entity(self, entity_name: str, entity):
         '''Adds entity object to Room'''
@@ -264,7 +271,7 @@ class Room:
         '''Display room'''
         with self.term.cbreak(), self.term.hidden_cursor():
             keystroke = None
-            while keystroke != "ESC":
+            while keystroke != "KEY_ESCAPE":
                 self.update_display()
                 print(f"{self.term.home}{self.term.white_on_black}{self.term.clear}")
                 for row in self.display_array:
@@ -283,6 +290,9 @@ class Room:
                 if keystroke.name == "KEY_RIGHT" or keystroke.name == "a":
                     right = self.move_entity("right", "player")
                     print(self.term.center("right"))
+                if keystroke.name == "e":
+                    print("you pressed E!")
+                    break
                 player_location_x, player_location_y = self.entity_dict["player"].get_location()
                 if player_location_x in [0, 10] or player_location_y in [0, 10]:
                     return [{up:"up", left:"left", down:"down", right:"right"}[True], self.entity_dict["player"]]
