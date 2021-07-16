@@ -1,0 +1,14 @@
+[
+    {
+        "id": "math_01",
+        "prompt": "What is the sum of the number after 1 with the number before 3?",
+        "choices": [
+            "2",
+            "4",
+            "6",
+            "32",
+            "A lot more!!!"
+        ],
+        "correct": 1
+    }
+]
