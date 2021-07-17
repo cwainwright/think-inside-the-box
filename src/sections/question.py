@@ -41,10 +41,15 @@ class Question(GameSection):
         self.state = QuestionScreenState.INITIAL
 
         # Initialize later
-        self.question: question.Question = None
-        self.start_y: int = None
-        self.selected_index: int = None
-        self.return_value: bool = None
+        self.question = question.Question(
+            'ERROR',
+            'WHOOPS, YOU SHOULD NOT BE HERE!',
+            ['NOT VALID'],
+            0,
+        )
+        self.start_y = 0
+        self.selected_index = 0
+        self.return_value = False
 
     def handle_start(self, start_data: object) -> bool:
         """Inherit"""
