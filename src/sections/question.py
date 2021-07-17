@@ -150,10 +150,10 @@ class Question(GameSection):
     def _pick_question(self, data: object) -> question.Question:
         # if data is a string, pick a question that matches .startswith()
         if type(data) == str:
-            return choice(q for q in self.questions_list if q.id.startswith(data))
+            return choice([q for q in self.questions_list if q.id.startswith(data)])
 
         # Otherwise, return a random non-special question
-        return choice(q for q in self.questions_list if not q.id.startswith('special-'))
+        return choice([q for q in self.questions_list if not q.id.startswith('special-')])
 
     def _redraw(self, terminal: Terminal) -> None:
         # Redraw the questions (A different one might be selected)
