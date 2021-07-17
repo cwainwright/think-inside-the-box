@@ -84,12 +84,12 @@ class Question(GameSection):
         if not inp:
             return False
 
-        if inp.name == 'KEY_UP' and self.selected_index > 0:
-            self.selected_index -= 1
+        if inp.name == 'KEY_UP':
+            self.selected_index = (self.selected_index - 1) % len(self.question.choices)
             return True
 
-        elif inp.name == 'KEY_DOWN' and self.selected_index < (len(self.question.choices) - 1):
-            self.selected_index += 1
+        elif inp.name == 'KEY_DOWN':
+            self.selected_index = (self.selected_index + 1) % len(self.question.choices)
             return True
 
         elif inp.name == 'KEY_ENTER':
