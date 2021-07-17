@@ -4,6 +4,7 @@ from abc import ABC, abstractmethod
 from blessed import Terminal
 
 from src.sections.debug import Debug
+from src.sections.game_over import GameOver
 from src.sections.menu import Menu, StartMenuType
 from src.sections.over_world import OverWorld
 from src.sections.question import NewQuestion, Question
@@ -55,3 +56,10 @@ class DummyQuestionManager(DummyGameManager):
 
     section_class = Question
     start_data = NewQuestion()
+
+
+class DummyGameOverManager(DummyGameManager):
+    """Dummy manager for the EndGame screen"""
+
+    section_class = GameOver
+    start_data = None
