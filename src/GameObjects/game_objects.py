@@ -143,12 +143,8 @@ class World:
 
     def update_world_location(self, r_location, c_location):
         self.world_location = [r_location, c_location]
-        try:
-            self.active_room = self.world_matrix[r_location][c_location]
-        except IndexError:
-            return False
-        else: 
-            return True
+        self.active_room = self.world_matrix[r_location][c_location]
+        return self.world_location[0] == 9
 
 # Room Data classes
 class Tile:

@@ -34,3 +34,4 @@ while not_end:
     print(world.active_room)
     world.active_room.add_entity("player", player)
     world.active_room.entity_dict["player"].update_location(player_x, player_y)
+print("Congratulations: you successfully made it through the maze!")
