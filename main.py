@@ -1,26 +1,26 @@
-import threading
-from queue import Queue
+from argparse import ArgumentParser
 
-from blessed import Terminal
-
+from src.dummy_manager import (
+    DummyMenuManager, DummyOverWorldManager, DummyQuestionManager
+)
+from src.game import Game
 from src.manager import GameManager
 
-FPS = 60
 
+def main() -> None:
+    """Run the game"""
+    parser = ArgumentParser()
+    parser.set_defaults(manager=GameManager)
 
-def main():
-    term = Terminal()
-    input_queue = Queue()
-    manager = GameManager(input_queue, term)
-    manager_thread = threading.Thread(target=manager)
-    manager_thread.start()
+    group = parser.add_mutually_exclusive_group(required=False)
+    group.add_argument('--menu', dest='manager', action='store_const', const=DummyMenuManager)
+    group.add_argument('--over_world', dest='manager', action='store_const', const=DummyOverWorldManager)
+    group.add_argument('--question', dest='manager', action='store_const', const=DummyQuestionManager)
 
-    with term.raw(), term.hidden_cursor(), term.location(), term.fullscreen():
-        while manager_thread.is_alive():
-            inp = term.inkey(1 / FPS)
-            if inp != '':
-                input_queue.put(inp)
-        print(term.normal + term.clear)
+    args = parser.parse_args()
+
+    game = Game(args.manager)
+    game.run()
 
 
 if __name__ == '__main__':
