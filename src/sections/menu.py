@@ -87,12 +87,13 @@ class Menu(GameSection):
             CharacterMenuType: CharacterMenuBehaviour,
         }[type(start_data)]
         self.behaviour = behaviour_class()
-        self.selected = self.behaviour.initial_selection(self.character_emoji)
 
         try:
             self.character_emoji = start_data.character
         except AttributeError:
             pass
+
+        self.selected = self.behaviour.initial_selection(self.character_emoji)
 
         return True
 
