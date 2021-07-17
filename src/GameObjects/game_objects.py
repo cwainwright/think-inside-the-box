@@ -115,7 +115,7 @@ class World:
     @property
     def completed(self) -> bool:
         """Indicates whether the world has been successfully completed or not"""
-        return self.world_location[0] == self.maze_data['length']
+        return self.world_location[0] == self.maze_data['length'] - 1
 
     def convert_matrix(self) -> list[list]:
         """Converts maze_matrix from maze.py to list of rooms"""
