@@ -18,7 +18,7 @@ maze_matrix_test = [
 #Initial Room
 term = Terminal()
 world = World(maze_matrix_test, term)
-world.active_room.add_entity("player", Player(1, 4))
+world.active_room.add_entity("player", Player(5, 2))
 room_directions = {"up":(-1, 0),"right":(0, 1),"down":(1, 0),"left":(0, -1)}
 player_directions = {"up":(5, 9),"right":(1, 5),"down":(5, 1),"left":(9, 5)}
 not_end = True

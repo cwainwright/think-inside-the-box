@@ -138,7 +138,7 @@ class World:
             world_list.append(row)
             print()
         world_list[0][self.maze_data["entrance_index"]] = Room("dead-end", 180, self.terminal)
-        world_list[-1][self.maze_data["entrance_index"]] = Room("dead-end", 0, self.terminal)
+        world_list[-1][self.maze_data["exit_index"]] = Room("dead-end", 0, self.terminal)
         return world_list
 
     def update_world_location(self, r_location, c_location):
