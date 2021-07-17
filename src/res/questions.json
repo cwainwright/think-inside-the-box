@@ -130,5 +130,15 @@
       "Go through the pipes"
     ],
     "correct": 2
+  },
+  {
+    "id": "monty_python",
+    "prompt": "What is the airspeed velocity of an unladen swallow?"
+    "choices": [
+      "50 mph",
+      "I don't know",
+      "Is that an African or European Swallow?",
+    ],
+    "correct": 2
   }
 ]
