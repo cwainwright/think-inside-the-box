@@ -6,7 +6,7 @@ from json import load
 
 @dataclass
 class Question:
-    """Quesiton Data class"""
+    """Question Data class"""
 
     id: str
     prompt: str
