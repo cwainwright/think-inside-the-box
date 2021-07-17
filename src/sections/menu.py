@@ -157,22 +157,37 @@ class Menu(GameSection):
     def run_rendering(self, term: Terminal, echo: Callable[[str], None]) -> None:
         """Runs the menu rendering with the user select highlighted and indexed items"""
         background_colour = term.black_on_skyblue
+        menu_list = self.behaviour.menu_list
+
+        # get the whitespace to center text from the largest line
+        # - 3 to account for the index number added on to each
+        max_line: str = max(menu_list)
+        center_whitespace = ((term.width - len(max_line) - 3) // 2) * " "
 
         # add the background colour and title
         echo(f"{term.home}{background_colour}{term.clear}")
         echo(term.center(term.darkblue_underline(self.behaviour.title)).rstrip())
 
         # take the len of the list into account for y positioning
-        menu_list = self.behaviour.menu_list
         first_option_line = (term.height - len(menu_list)) // 2
         echo(term.move_y(first_option_line) + "\n")
 
         for index, item in enumerate(menu_list):
 
             if index == self.selected:
-                echo(background_colour + term.center(term.darkblue_reverse(f"{index+1}. {item}")).rstrip() + "\n")
+                echo(
+                    background_colour
+                    + center_whitespace
+                    + term.darkblue_reverse(f"{index+1}. {item}").rstrip()
+                    + "\n"
+                )
             else:
-                echo(background_colour + term.center(f"{index+1}. {item}").rstrip() + "\n")
+                echo(
+                    background_colour
+                    + center_whitespace
+                    + f"{index+1}. {item}".rstrip()
+                    + "\n"
+                )
 
         echo(term.normal)
 
