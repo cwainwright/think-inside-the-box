@@ -144,7 +144,7 @@ class World:
     def update_world_location(self, r_location, c_location):
         self.world_location = [r_location, c_location]
         self.active_room = self.world_matrix[r_location][c_location]
-        return self.world_location[0] == 9
+        return not self.world_location[0] == 9
 
 # Room Data classes
 class Tile:
