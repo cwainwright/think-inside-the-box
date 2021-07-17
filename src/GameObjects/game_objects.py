@@ -21,14 +21,14 @@ def three_way_junction_matcher(entrances_exits):
     if entrances_exits.count(True) != 3:
         return None
 
-    sequence = [True]*3 + [False]
+    sequence = [True, True, True, False]
     for index in range(4):
         if sequence == entrances_exits:
             return {
                 "type":"3-way-junction",
                 "rotation":90*index
             }
-        sequence = sequence[1:]+sequence[:1]
+        sequence = sequence[-1:]+sequence[:-1]
 
     return None
 
@@ -43,7 +43,7 @@ def corner_matcher(entrances_exits):
                 "type":"corner",
                 "rotation":90*index
             }
-        sequence = sequence[1:]+sequence[:1]
+        sequence = sequence[-1:]+sequence[:-1]
 
     return None
 
@@ -73,7 +73,7 @@ def dead_end_matcher(entrances_exits):
                 "type":"dead-end",
                 "rotation":90*index
             }
-        sequence = sequence[1:]+sequence[:1]
+        sequence = sequence[-1:]+sequence[:-1]
 
 # World Data class
 class World:
@@ -98,15 +98,18 @@ class World:
             row = []
             for column_index in range(self.maze_data["width"]):
                 if row_index in [0, self.maze_data["length"]-1] or column_index in [0, self.maze_data["width"]-1]:
+                    print(column_index, row_index, end=":")
+                    print("Empty")
                     row.append(Empty())
                 else:
-                    print(column_index, row_index)
+                    print(column_index, row_index, end=":")
                     entrances_exits = [
                         self.raw_matrix[row_index-1][column_index],
                         self.raw_matrix[row_index][column_index+1],
                         self.raw_matrix[row_index+1][column_index],
                         self.raw_matrix[row_index][column_index-1]
                     ]
+                    print(entrances_exits, end=" - ")
                     if self.raw_matrix[row_index][column_index]:
                         matchers = [
                             four_way_junction_matcher,
@@ -122,14 +125,18 @@ class World:
                                 room_parameters = result
                                 break
 
+                        print("Room:"+str(room_parameters))
+
                         row.append(Room(
                             room_parameters["type"],
                             room_parameters["rotation"],
                             self.terminal,
                         ))
                     else:
+                        print("Empty")
                         row.append(Empty())
             world_list.append(row)
+            print()
         world_list[0][self.maze_data["entrance_index"]] = Room("dead-end", 180, self.terminal)
         world_list[-1][self.maze_data["entrance_index"]] = Room("dead-end", 0, self.terminal)
         return world_list
