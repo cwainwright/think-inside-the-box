@@ -6,6 +6,8 @@ from typing import Callable, Optional
 from blessed import Terminal
 from blessed.keyboard import Keystroke
 
+from src.commands import EndGame
+
 echo = partial(print, end='', flush=True)
 
 
@@ -13,31 +15,46 @@ class GameSection(ABC):
     """The abstraction of a section of the game to be run.
 
     This class has 4 abstract methods that need implementing:
-        - handle_start which is called once each time this section of the game is started (e.g. passing from a question back to the over world)
-        - run_processing which receives the player input and is called repeatedly (once per frame), this is where you will implement most of your logic
-        - run_rendering which handles the rendering of the current state using Blessed, only called if run_processing returns True
-        - handle_stop which is called once each time this section of the game is started, just before it stops and hands control back to the manager
+
+    - handle_start which is called once each time this section of the game is started (e.g. passing from a question
+    back to the over world)
+
+    - run_processing which receives the player input and is called repeatedly (once per frame), this is where you
+    will implement most of your logic
+
+    - run_rendering which handles the rendering of the current state using Blessed, only called if run_processing
+    returns True
+
+    - handle_stop which is called once each time this section of the game is started, just before it stops and hands
+    control back to the manager
 
     Useful methods provided:
-        - stop() which should be called to indicate this game section should stop (e.g. you encounter an NPC on the over world)
+
+    - stop() which should be called to indicate this game section should stop (e.g. you encounter an NPC on the over
+    world)
     """
 
     def __init__(self, in_queue: queue.Queue):
         self._in_queue = in_queue
         self._running = True
 
-    def __call__(self, terminal, start_data):
+    def __call__(self, terminal: Terminal, start_data: object):
+        """Run the main loop for this game section"""
         if self.handle_start(start_data):
             self.run_rendering(terminal, echo)
 
         while self._running:
             inp = self._get_input()
+
+            if inp == chr(3):
+                return EndGame()
+
             if self.run_processing(inp):
                 self.run_rendering(terminal, echo)
 
         return self.handle_stop()
 
-    def stop(self):
+    def stop(self) -> None:
         """Call to cease the running of the game section after a potential final render"""
         self._running = False
 
@@ -47,7 +64,7 @@ class GameSection(ABC):
         pass
 
     @abstractmethod
-    def run_processing(self, inp: Optional[Keystroke], first_loop: bool) -> bool:
+    def run_processing(self, inp: Optional[Keystroke]) -> bool:
         """Handle any processing for the game section
 
         The input is either None (for no user input this cycle), or the keystroke the user made.
@@ -58,7 +75,7 @@ class GameSection(ABC):
         pass
 
     @abstractmethod
-    def run_rendering(self, terminal: Terminal, echo: Callable[[str], None]):
+    def run_rendering(self, terminal: Terminal, echo: Callable[[str], None]) -> None:
         """Handle the rendering of the current state of the game section to the terminal"""
         pass
 
