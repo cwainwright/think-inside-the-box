@@ -54,6 +54,7 @@ class Question(GameSection):
     def __init__(self, in_queue: Queue):
         super().__init__(in_queue)
         self.questions_list = question.get_all_questions(QUESTION_PATH)
+        self.seen_questions = []
         self.state = QuestionScreenState.INITIAL
 
         # Initialize later
@@ -169,12 +170,21 @@ class Question(GameSection):
         self.stop()
 
     def _pick_question(self, question_prefix: Optional[str]) -> question.Question:
+        if self.questions_list == []:
+            self.questions_list = self.seen_questions
+            self.seen_questions = []
+
         # if data is a string, pick a question that matches .startswith()
         if question_prefix is not None:
-            return choice([q for q in self.questions_list if q.id.startswith(question_prefix)])
+            chosen_question = choice([q for q in self.questions_list if q.id.startswith(question_prefix)])
+        else:
+            # Otherwise, return a random non-special question
+            chosen_question = choice([q for q in self.questions_list if not q.id.startswith('special-')])
 
-        # Otherwise, return a random non-special question
-        return choice([q for q in self.questions_list if not q.id.startswith('special-')])
+        self.seen_questions.append(chosen_question)
+        self.questions_list.remove(chosen_question)
+
+        return chosen_question
 
     def _redraw(self, terminal: Terminal, echo: Callable[[str], None]) -> None:
         # Redraw the questions (A different one might be selected)
