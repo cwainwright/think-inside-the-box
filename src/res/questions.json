@@ -1,14 +1,134 @@
 [
-    {
-        "id": "math_01",
-        "prompt": "What is the sum of the number after 1 with the number before 3?",
-        "choices": [
-            "2",
-            "4",
-            "6",
-            "32",
-            "A lot more!!!"
-        ],
-        "correct": 1
-    }
+  {
+    "id": "math_01",
+    "prompt": "What is the sum of the number after 1 with the number before 3?",
+    "choices": [
+      "2",
+      "4",
+      "6",
+      "32",
+      "A lot more!!!"
+    ],
+    "correct": 1
+  },
+  {
+    "id": "something_0",
+    "prompt": "If you were running a race and passed the person in second place, what place would you be in now?",
+    "choices": [
+      "First",
+      "Last",
+      "Second",
+      "Third",
+      "I'm out of the race"
+    ],
+    "correct": "2"
+  },
+  {
+    "id": "math_2",
+    "prompt": "Some months have 31 days, others have 30 days. How many have 28 days?",
+    "choices": [
+      "12",
+      "2",
+      "1",
+      "5"
+    ],
+    "correct": 0
+  },
+  {
+    "id": "something_1",
+    "prompt": "Larry’s father has five sons named Ten, Twenty, Thirty, Forty,... Guess what would be the name of the fifth? ",
+    "choices": [
+      "Fifty",
+      "Sixty",
+      "Donald",
+      "Larry",
+      "Steve"
+    ],
+    "correct": 3
+  },
+  {
+    "id": "something_2",
+    "prompt": "There was an airplane crash, every single person on board died, but yet two people survived. How is this possible?",
+    "choices": [
+      "They were in the back of the plane",
+      "They were children",
+      "They were a couple"
+    ],
+    "correct": 2
+  },
+  {
+    "id": "something_2",
+    "prompt": "If there are 12 fish and half of them drown, how many are there?",
+    "choices": [
+      "6",
+      "3",
+      "12",
+      "9"
+    ],
+    "correct": 2
+  },
+  {
+    "id": "math_2",
+    "prompt": "How many times can you subtract 10 from 100?",
+    "choices": [
+      "Ten times",
+      "Twice",
+      "Once",
+      "You can't"
+    ],
+    "correct": 3
+  },
+  {
+    "id": "math_3",
+    "prompt": "If there are 6 apples and you take away 4, how many do you have?",
+    "choices": [
+      "2",
+      "4",
+      "0",
+      "6"
+    ],
+    "correct": 1
+  },
+  {
+    "id": "something_3",
+    "prompt": "If you had only one match, and entered a dark room containing an oil lamp, some newspaper, and some kindling wood, which would you light first?",
+    "choices": [
+      "The lamp",
+      "The newspaper",
+      "The wood",
+      "The match"
+    ],
+    "correct": "3"
+  },
+  {
+    "id": "something_4",
+    "prompt": "What word would you use to describe a man who does not have all his fingers on one hand?",
+    "choices": [
+      "Normal",
+      "Weird"
+    ],
+    "correct": 0
+  },
+  {
+    "id": "something_5",
+    "prompt": "Uncle Bill’s farm had a terrible storm and all but seven sheep were killed. How many sheep are still alive?",
+    "choices": [
+      "0",
+      "3",
+      "4",
+      "7"
+    ],
+    "correct": 3
+  },
+  {
+    "id": "something_6",
+    "prompt": "Imagine you’re in a room that’s filling up with water quickly. There are no windows or doors. How do you get out?",
+    "choices": [
+      "Climb over the walls",
+      "Crawl through a hole",
+      "Stop imagining",
+      "Go through the pipes"
+    ],
+    "correct": 2
+  }
 ]
