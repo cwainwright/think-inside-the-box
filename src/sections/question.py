@@ -11,6 +11,7 @@ from blessed import Terminal
 from blessed.keyboard import Keystroke
 from pyfiglet import Figlet
 
+from src.commands import ChangeSection
 from src.sections.base import GameSection
 from src.util import question
 
@@ -38,6 +39,13 @@ class NewQuestion:
     """The start data for a question screen"""
 
     question_prefix: Optional[str] = None
+
+
+@dataclass
+class QuestionResult:
+    """The result of a question screen"""
+
+    was_correct: bool
 
 
 class Question(GameSection):
@@ -102,7 +110,7 @@ class Question(GameSection):
 
     def handle_stop(self) -> object:
         """Inherit"""
-        return self.return_value
+        return ChangeSection('over_world', QuestionResult(self.return_value))
 
     # Member Functions
     def _write_question(self, terminal: Terminal, echo: Callable[[str], None]) -> None:
