@@ -4,6 +4,7 @@ from blessed import Terminal
 
 from src.commands import ChangeSection, EndGame, StartGame
 from src.sections.bootstrap import Bootstrap
+from src.sections.game_over import GameOver
 from src.sections.menu import Menu
 from src.sections.over_world import OverWorld
 from src.sections.question import Question
@@ -18,6 +19,7 @@ class GameManager:
         self.question = Question(in_queue)
         self.menu = Menu(in_queue)
         self.bootstrap = Bootstrap(in_queue)
+        self.game_over = GameOver(in_queue)
 
     def __call__(self):
         """Call dunder method"""
@@ -25,6 +27,9 @@ class GameManager:
         data = StartGame()
 
         while not isinstance(data, EndGame):
+            print(self.terminal.move_xy(0, 0))
+            print(self.terminal.clear)
+
             data = active(self.terminal, data)
 
             if isinstance(data, ChangeSection):
