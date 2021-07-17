@@ -8,7 +8,7 @@ from blessed.keyboard import Keystroke
 
 from src.commands import EndGame
 
-echo = partial(print, end='', flush=True)
+_echo = partial(print, end='', flush=True)
 
 
 class GameSection(ABC):
@@ -43,7 +43,7 @@ class GameSection(ABC):
         self._running = True
 
         if self.handle_start(start_data):
-            self.run_rendering(terminal, echo)
+            self.run_rendering(terminal, _echo)
 
         while self._running:
             inp = self._get_input()
@@ -52,7 +52,7 @@ class GameSection(ABC):
                 return EndGame()
 
             if self.run_processing(inp):
-                self.run_rendering(terminal, echo)
+                self.run_rendering(terminal, _echo)
 
         return self.handle_stop()
 
