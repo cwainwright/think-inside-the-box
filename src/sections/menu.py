@@ -75,9 +75,6 @@ class CharacterMenuBehaviour:
 class Menu(GameSection):
     """
     Class for Menu System
-
-        - display(list[]) "Dislays menu from given dictionary"
-        - get_choice() "Returns the most recent choice from the Menu object"
     """
 
     def __init__(self, in_queue: Queue):
