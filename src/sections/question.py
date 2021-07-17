@@ -1,4 +1,5 @@
 import time
+from dataclasses import dataclass
 from enum import IntEnum
 from pathlib import Path
 from queue import Queue
@@ -32,6 +33,13 @@ class QuestionScreenState(IntEnum):
     REVEAL_ANSWER = 3
 
 
+@dataclass
+class NewQuestion:
+    """The start data for a question screen"""
+
+    question_prefix: Optional[str] = None
+
+
 class Question(GameSection):
     """The question screen section of the game"""
 
@@ -51,10 +59,10 @@ class Question(GameSection):
         self.selected_index = 0
         self.return_value = False
 
-    def handle_start(self, start_data: object) -> bool:
+    def handle_start(self, start_data: NewQuestion) -> bool:
         """Inherit"""
         self.state = QuestionScreenState.INITIAL
-        self.question = self._pick_question(start_data)
+        self.question = self._pick_question(start_data.question_prefix)
         self.selected_index = 0
         return False
 
@@ -152,10 +160,10 @@ class Question(GameSection):
         echo(terminal.normal)
         self.stop()
 
-    def _pick_question(self, data: object) -> question.Question:
+    def _pick_question(self, question_prefix: Optional[str]) -> question.Question:
         # if data is a string, pick a question that matches .startswith()
-        if isinstance(data, str):
-            return choice([q for q in self.questions_list if q.id.startswith(data)])
+        if question_prefix is not None:
+            return choice([q for q in self.questions_list if q.id.startswith(question_prefix)])
 
         # Otherwise, return a random non-special question
         return choice([q for q in self.questions_list if not q.id.startswith('special-')])
