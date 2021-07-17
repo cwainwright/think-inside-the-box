@@ -17,7 +17,7 @@ class ChangeSection:
 
     def __init__(
             self,
-            new_section: Literal['over_world', 'question', 'menu'],
+            new_section: Literal['over_world', 'question', 'menu', 'game_over'],
             data: object,
     ):
         self.new_section = new_section

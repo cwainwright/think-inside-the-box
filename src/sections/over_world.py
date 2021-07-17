@@ -5,7 +5,7 @@ from typing import Callable, Optional, Union
 from blessed import Terminal
 from blessed.keyboard import Keystroke
 
-from src.commands import ChangeSection, EndGame
+from src.commands import ChangeSection
 from src.GameObjects.game_objects import World
 from src.sections.base import GameSection
 from src.sections.question import NewQuestion, QuestionResult
@@ -25,8 +25,7 @@ class OverWorld(GameSection):
 
     def __init__(self, in_queue: Queue):
         super().__init__(in_queue)
-        world_maze = maze.generate(10, 10)
-        print(world_maze)
+        world_maze = maze.generate(3, 3)
         self.world = World(world_maze)
         self.npc = None
 
@@ -55,6 +54,11 @@ class OverWorld(GameSection):
             except NameError:
                 pass
 
+        try:
+            self.world.set_character(start_data.character)
+        except AttributeError:
+            pass
+
         self.npc = None
 
         return True
@@ -80,9 +84,6 @@ class OverWorld(GameSection):
             if adjacent_npc is not None:
                 self.stop()
                 self.npc = adjacent_npc[1]
-            # else:
-            #     if adjacent_npc[1].get_location() in [[9, 5], [5, 9], [1, 5], [5, 1]]:
-            #         self.move_entity(direction, adjacent_npc[0])
 
         player = self.world.active_room.entity_dict['player']
         player_location_x, player_location_y = player.get_location()
@@ -97,6 +98,9 @@ class OverWorld(GameSection):
                 self.world.active_room.entity_dict['player'].update_location(
                     *{'up': (5, 9), 'right': (1, 5), 'down': (5, 1), 'left': (9, 5)}[player_move_direction]
                 )
+                if self.world.completed:
+                    self.stop()
+                    return False
             return True
 
         return False
@@ -109,6 +113,6 @@ class OverWorld(GameSection):
     def handle_stop(self) -> object:
         """Inherit"""
         if self.world.completed:
-            return EndGame()
+            return ChangeSection('game_over', None)
         else:
             return ChangeSection('question', NewQuestion())
