@@ -1,6 +1,5 @@
 import time
 from enum import IntEnum
-from functools import partial
 from pathlib import Path
 from queue import Queue
 from random import choice
@@ -17,7 +16,6 @@ from src.util import question
 # Constants
 QUESTION_PATH = Path(__file__).parent / '..' / 'res/questions.json'
 TYPING_SPEED = 40
-echo = partial(print, end='', flush=True)
 
 
 def get_padding_unit(terminal: Terminal) -> int:
@@ -78,24 +76,24 @@ class Question(GameSection):
 
         return False
 
-    def run_rendering(self, terminal: Terminal, _echo: Callable[[str], None]) -> None:
+    def run_rendering(self, terminal: Terminal, echo: Callable[[str], None]) -> None:
         """Inherit"""
         if self.state == QuestionScreenState.WRITING_QUESTION:
-            return self._write_question(terminal)
+            return self._write_question(terminal, echo)
 
-        self._redraw(terminal)
+        self._redraw(terminal, echo)
 
         if self.state == QuestionScreenState.REVEAL_ANSWER:
-            return self._write_answer(terminal)
+            return self._write_answer(terminal, echo)
 
     def handle_stop(self) -> object:
         """Inherit"""
         return self.return_value
 
     # Member Functions
-    def _write_question(self, terminal: Terminal) -> None:
+    def _write_question(self, terminal: Terminal, echo: Callable[[str], None]) -> None:
         padding_unit = get_padding_unit(terminal)
-        self._draw_question_mark(terminal)
+        self._draw_question_mark(terminal, echo)
 
         # Write the question prompt
         echo(terminal.move_xy(padding_unit, terminal.height // 4))
@@ -120,9 +118,9 @@ class Question(GameSection):
             time.sleep(0.75)
 
         self.state = QuestionScreenState.USER_SELECTION
-        self._redraw(terminal)
+        self._redraw(terminal, echo)
 
-    def _draw_question_mark(self, terminal: Terminal) -> None:
+    def _draw_question_mark(self, terminal: Terminal, echo: Callable[[str], None]) -> None:
         figlet = Figlet(font='doh', justify='right', width=terminal.width)
         render = figlet.renderText("?")
         cleaned = "\n".join(line for line in render.split("\n") if not line.isspace())
@@ -135,12 +133,12 @@ class Question(GameSection):
             + terminal.normal
         )
 
-    def _write_answer(self, terminal: Terminal) -> None:
+    def _write_answer(self, terminal: Terminal, echo: Callable[[str], None]) -> None:
         correct = self.question.is_index_correct(self.selected_index)
         if correct:
-            self._write_footer(terminal, terminal.white + "▶" + terminal.bold_green + "  CORRECT!!")
+            self._write_footer(terminal, echo, terminal.white + "▶" + terminal.bold_green + "  CORRECT!!")
         else:
-            self._write_footer(terminal, terminal.white + "▶" + terminal.bold_red + "  INCORRECT!!")
+            self._write_footer(terminal, echo, terminal.white + "▶" + terminal.bold_red + "  INCORRECT!!")
 
         time.sleep(3)
         self.return_value = correct
@@ -155,7 +153,7 @@ class Question(GameSection):
         # Otherwise, return a random non-special question
         return choice([q for q in self.questions_list if not q.id.startswith('special-')])
 
-    def _redraw(self, terminal: Terminal) -> None:
+    def _redraw(self, terminal: Terminal, echo: Callable[[str], None]) -> None:
         # Redraw the questions (A different one might be selected)
         echo(terminal.move_y(self.start_y))
         padding_unit = get_padding_unit(terminal)
@@ -171,7 +169,7 @@ class Question(GameSection):
 
             echo(f"{choice_}{terminal.normal}")
 
-    def _write_footer(self, terminal: Terminal, text: str) -> None:
+    def _write_footer(self, terminal: Terminal, echo: Callable[[str], None], text: str) -> None:
         padding_unit = get_padding_unit(terminal)
         echo(
             terminal.move_xy(padding_unit, self.start_y)
