@@ -40,6 +40,8 @@ class GameSection(ABC):
 
     def __call__(self, terminal: Terminal, start_data: object):
         """Run the main loop for this game section"""
+        self._running = True
+
         if self.handle_start(start_data):
             self.run_rendering(terminal, echo)
 
