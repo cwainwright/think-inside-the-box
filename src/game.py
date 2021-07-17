@@ -21,7 +21,7 @@ class Game:
         manager_thread = threading.Thread(target=manager)
         manager_thread.start()
 
-        with term.raw(), term.hidden_cursor(), term.location():
+        with term.fullscreen(), term.raw(), term.hidden_cursor(), term.location():
             while manager_thread.is_alive():
                 inp = term.inkey(1 / FPS)
 

@@ -16,7 +16,7 @@ from src.util import question
 
 # Constants
 QUESTION_PATH = Path(__file__).parent / '..' / 'res/questions.json'
-TYPING_SPEED = 50
+TYPING_SPEED = 40
 echo = partial(print, end='', flush=True)
 
 # A padding unit corresponds to 1/16th of the terminal width
@@ -40,6 +40,7 @@ class Question(GameSection):
         self.question: question.Question = None
         self.start_y: int = None
         self.selected_index: int = None
+        self.return_value: bool = None
 
     def handle_start(self, start_data: object):
         self.state = QuestionScreenState.INITIAL
@@ -52,15 +53,16 @@ class Question(GameSection):
             self.state = QuestionScreenState.WRITING_QUESTION
             return True
 
-        if inp == 'KEY_UP' and self.index > 0:
-            self.index -= 1
+        if not inp: return False
+        if inp.name == 'KEY_UP' and self.selected_index > 0:
+            self.selected_index -= 1
             return True
 
-        elif inp == 'KEY_DOWN' and self.index < (len(self.question.choices) - 1):
-            self.index += 1
+        elif inp.name == 'KEY_DOWN' and self.selected_index < (len(self.question.choices) - 1):
+            self.selected_index += 1
             return True
 
-        elif inp == 'KEY_ENTER':
+        elif inp.name == 'KEY_ENTER':
             self.state = QuestionScreenState.REVEAL_ANSWER
             return True
 
@@ -72,8 +74,11 @@ class Question(GameSection):
 
         self._redraw(terminal)
 
+        if self.state == QuestionScreenState.REVEAL_ANSWER:
+            return self._write_answer(terminal)
+
     def handle_stop(self) -> object:
-        pass
+        return self.return_value
 
     # Member Functions
     def _write_question(self, terminal):
@@ -90,7 +95,9 @@ class Question(GameSection):
         # Write the choices
         time.sleep(1)
         echo(terminal.move_down(2))
-        self.start_y = terminal.get_location()[0]  # Remember at which Y location we start writing
+        # termnial.get_location() doesn't seem to be working in multithreaded,
+        # so we assume the question is only 1 line long
+        self.start_y = (terminal.height // 4) + 2
 
         for i, choice in enumerate(self.question.choices):
             echo(terminal.move_x(padding_unit * 2) + terminal.move_down(1))
@@ -98,7 +105,7 @@ class Question(GameSection):
                 f"{terminal.bold_cyan}{ascii_uppercase[i]}."
                 f" {terminal.normal + terminal.lawngreen}{choice}"
             ))
-            time.sleep(0.5)
+            time.sleep(0.75)
 
         self.state = QuestionScreenState.USER_SELECTION
         self._redraw(terminal)
@@ -115,10 +122,26 @@ class Question(GameSection):
             + cleaned
             + terminal.normal
         )
+    
+    def _write_answer(self, terminal):
+        correct = self.question.is_index_correct(self.selected_index)
+        if correct:
+            self._write_footer(terminal, terminal.white + "▶" + terminal.bold_green + "  CORRECT!!")
+        else:
+            self._write_footer(terminal, terminal.white + "▶" + terminal.bold_red + "  INCORRECT!!")
+
+        time.sleep(3)
+        self.return_value = correct
+        echo(terminal.normal)
+        self.stop()
 
     def _pick_question(self, data):
-        # We don't have any special logic here yet
-        return choice(self.questions_list)
+        # if data is a string, pick a question that matches .startswith()
+        if type(data) == str:
+            return choice(q for q in self.questions_list if q.id.startswith(data))
+
+        # Otherwise, return a random non-special question
+        return choice(q for q in self.questions_list if not q.id.startswith('special-'))
 
     def _redraw(self, terminal):
         # Redraw the questions (A different one might be selected)
@@ -131,6 +154,14 @@ class Question(GameSection):
             echo((
                 f"{terminal.reverse if selected else ''}"
                 f"{terminal.bold_cyan}{ascii_uppercase[i]}."
-                f" {(terminal.normal + terminal.lawngreen) if self.state == QuestionScreenState.USER_SELECTION else ''}"
+                f" {(terminal.normal + terminal.lawngreen) if self.state == QuestionScreenState.USER_SELECTION or not selected else ''}"
                 f"{choice}{terminal.normal}"
             ))
+
+    def _write_footer(self, terminal, text: str):
+        padding_unit = get_padding_unit(terminal)
+        echo(
+            terminal.move_xy(padding_unit, self.start_y)
+            + terminal.move_down(len(self.question.choices) + 3)
+            + text
+        )
