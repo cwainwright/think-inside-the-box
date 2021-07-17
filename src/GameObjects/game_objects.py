@@ -3,7 +3,7 @@ import json
 import random
 from copy import deepcopy
 from pathlib import Path
-from typing import Optional
+from typing import Callable, Optional
 
 from blessed import Terminal
 
@@ -89,9 +89,8 @@ def dead_end_matcher(entrances_exits: list[bool]) -> Optional[dict]:
 class World:
     """Container for world/level - contains all rooms initialised"""
 
-    def __init__(self, maze_matrix: list[list[bool]], term: Terminal):
+    def __init__(self, maze_matrix: list[list[bool]]):
         self.raw_matrix = maze_matrix
-        self.terminal = term
         # Find entrance (bottom) exit (top)
         self.maze_data = {
             "length": len(self.raw_matrix),
@@ -101,6 +100,22 @@ class World:
         }
         self.world_matrix = self.convert_matrix()
         self.update_world_location(0, self.maze_data["entrance_index"])
+        self.active_room.add_entity('player', Player(5, 2))
+        self.active_room.entity_dict['player'].update_location(5, 2)
+
+    def set_character(self, character: str) -> None:
+        """Call to set the character string of the character"""
+        self.active_room.entity_dict['player'].representation = character
+
+    def reset_to_start(self) -> None:
+        """Call to reset the character and world to the start of the maze"""
+        self.update_world_location(0, self.maze_data["entrance_index"])
+        self.active_room.entity_dict['player'].update_location(5, 2)
+
+    @property
+    def completed(self) -> bool:
+        """Indicates whether the world has been successfully completed or not"""
+        return self.world_location[0] == self.maze_data['length']
 
     def convert_matrix(self) -> list[list]:
         """Converts maze_matrix from maze.py to list of rooms"""
@@ -109,18 +124,18 @@ class World:
             row = []
             for column_index in range(self.maze_data["width"]):
                 if row_index in [0, self.maze_data["length"] - 1] or column_index in [0, self.maze_data["width"] - 1]:
-                    print(column_index, row_index, end=":")
-                    print("Empty")
+                    # print(column_index, row_index, end=":")
+                    # print("Empty")
                     row.append(Empty())
                 else:
-                    print(column_index, row_index, end=":")
+                    # print(column_index, row_index, end=":")
                     entrances_exits = [
                         self.raw_matrix[row_index - 1][column_index],
                         self.raw_matrix[row_index][column_index + 1],
                         self.raw_matrix[row_index + 1][column_index],
                         self.raw_matrix[row_index][column_index - 1]
                     ]
-                    print(entrances_exits, end=" - ")
+                    # print(entrances_exits, end=" - ")
                     if self.raw_matrix[row_index][column_index]:
                         matchers = [
                             four_way_junction_matcher,
@@ -136,20 +151,19 @@ class World:
                                 room_parameters = result
                                 break
 
-                        print("Room:" + str(room_parameters))
+                        # print("Room:" + str(room_parameters))
 
                         row.append(Room(
                             room_parameters["type"],
                             room_parameters["rotation"],
-                            self.terminal,
                         ))
                     else:
-                        print("Empty")
+                        # print("Empty")
                         row.append(Empty())
             world_list.append(row)
-            print()
-        world_list[0][self.maze_data["entrance_index"]] = Room("dead-end", 180, self.terminal)
-        world_list[-1][self.maze_data["exit_index"]] = Room("dead-end", 0, self.terminal)
+            # print()
+        world_list[0][self.maze_data["entrance_index"]] = Room("dead-end", 180)
+        world_list[-1][self.maze_data["exit_index"]] = Room("dead-end", 0)
         return world_list
 
     def update_world_location(self, r_location: int, c_location: int) -> bool:
@@ -239,12 +253,10 @@ class Room:
             self,
             room_type: str,
             rotation: int,
-            term: Terminal,
             room_templates_filepath: Path = Path(__file__).parent / 'room_templates.json',
     ):
         accepted_room_types = ["dead-end", "straight", "corner", "3-way-junction", "4-way-junction"]
         self.room_type = room_type if room_type in accepted_room_types else "straight"
-        self.term = term
         self.rotation = rotation
         self.display_array = []
         self.entity_dict = {}
@@ -274,7 +286,7 @@ class Room:
             self.tiles.append(row)
         placements = random.choice([(5, 1), (9, 5), (5, 9), (1, 5)])
         self.add_entity(
-            "Enemy" + str(placements),
+            "enemy" + str(placements),
             NPC(placements[0], placements[1])
         )
 
@@ -293,53 +305,63 @@ class Room:
             location = entities.get_location()
             self.display_array[location[1]][location[0]] = str(entities)
 
-    def display(self) -> tuple[str, dict]:
-        """Display room"""
-        with self.term.cbreak(), self.term.hidden_cursor():
-            keystroke = None
-            while keystroke != "KEY_ESCAPE":
-                self.update_display()
-                print(f"{self.term.home}{self.term.white_on_black}{self.term.clear}")
+    def render(self, terminal: Terminal, echo: Callable[[str], None]) -> None:
+        """Render the current room state to the terminal"""
+        echo(terminal.move_xy(0, 0))
+        echo(terminal.clear)
 
-                for row in self.display_array:
-                    print(self.term.center("".join(row)))
+        start_y = (terminal.height - len(self.display_array)) // 2
+        echo(terminal.move_downs(start_y))
+        for row in self.display_array:
+            echo(terminal.center("".join(row)))
 
-                keystroke = self.term.inkey(timeout=3)
-                up, left, down, right = [False] * 4
-                if keystroke.name == "KEY_UP":
-                    up = self.move_entity("up", "player")
-                    print(self.term.center("up"))
-                elif keystroke.name == "KEY_LEFT":
-                    left = self.move_entity("left", "player")
-                    print(self.term.center("left"))
-                elif keystroke.name == "KEY_DOWN":
-                    down = self.move_entity("down", "player")
-                    print(self.term.center("down"))
-                elif keystroke.name == "KEY_RIGHT":
-                    right = self.move_entity("right", "player")
-                    print(self.term.center("right"))
-                elif keystroke.name == "KEY_TAB":
-                    adjacent_npc = self.scan_for_adjacent_NPC()
-                    try:
-                        if adjacent_npc[1].ask_question():
-                            if adjacent_npc[1].get_location() == [9, 5]:
-                                direction = "up"
-                            elif adjacent_npc[1].get_location() == [5, 9]:
-                                direction = "left"
-                            elif adjacent_npc[1].get_location() == [1, 5]:
-                                direction = "down"
-                            elif adjacent_npc[1].get_location() == [5, 1]:
-                                direction = "right"
-
-                    except TypeError:
-                        pass
-                    else:
-                        if adjacent_npc[1].get_location() in [[9, 5], [5, 9], [1, 5], [5, 1]]:
-                            self.move_entity(direction, adjacent_npc[0])
-
-                player_location_x, player_location_y = self.entity_dict["player"].get_location()
-                if player_location_x in [0, 10] or player_location_y in [0, 10]:
-                    return {up: "up", left: "left", down: "down", right: "right"}[True], self.entity_dict["player"]
+    # def display(self) -> tuple[str, dict]:
+    #     """Display room"""
+    #     with self.term.cbreak(), self.term.hidden_cursor():
+    #         keystroke = None
+    #         while keystroke != "KEY_ESCAPE":
+    #             self.update_display()
+    #             print(f"{self.term.home}{self.term.white_on_black}{self.term.clear}")
+    #
+    #             for row in self.display_array:
+    #                 print(self.term.center("".join(row)))
+    #
+    #             keystroke = self.term.inkey(timeout=3)
+    #             up, left, down, right = [False] * 4
+    #             if keystroke.name == "KEY_UP":
+    #                 up = self.move_entity("up", "player")
+    #                 print(self.term.center("up"))
+    #             elif keystroke.name == "KEY_LEFT":
+    #                 left = self.move_entity("left", "player")
+    #                 print(self.term.center("left"))
+    #             elif keystroke.name == "KEY_DOWN":
+    #                 down = self.move_entity("down", "player")
+    #                 print(self.term.center("down"))
+    #             elif keystroke.name == "KEY_RIGHT":
+    #                 right = self.move_entity("right", "player")
+    #                 print(self.term.center("right"))
+    #             elif keystroke.name == "KEY_TAB":
+    #                 adjacent_npc = self.scan_for_adjacent_NPC()
+    #                 try:
+    #                     if adjacent_npc[1].ask_question():
+    #                         if adjacent_npc[1].get_location() == [9, 5]:
+    #                             direction = "up"
+    #                         elif adjacent_npc[1].get_location() == [5, 9]:
+    #                             direction = "left"
+    #                         elif adjacent_npc[1].get_location() == [1, 5]:
+    #                             direction = "down"
+    #                         elif adjacent_npc[1].get_location() == [5, 1]:
+    #                             direction = "right"
+    #
+    #                 except TypeError:
+    #                     pass
+    #                 else:
+    #                     if adjacent_npc[1].get_location() in [[9, 5], [5, 9], [1, 5], [5, 1]]:
+    #                         self.move_entity(direction, adjacent_npc[0])
+    #
+    #             player_location_x, player_location_y = self.entity_dict["player"].get_location()
+    #             if player_location_x in [0, 10] or player_location_y in [0, 10]:
+    #                 return {up: "up", left: "left", down: "down", right: "right"}[True], self.entity_dict["player"]
 
     def move_entity(self, direction: str, entity_name: str) -> bool:
         """Alter coord of entity in self.entity_dict"""
@@ -352,15 +374,15 @@ class Room:
         for entities in self.entity_dict.items():
             if entities[0] != "player":
                 space_vacancy = [x_translated, y_translated] != entities[1].get_location()
-        print(self.term.center(entity.get_location()))
-        print(self.term.center(direction))
-        print(self.term.center({True: "Space vacant", False: "Space not vacant"}[space_vacancy]))
+        # print(self.term.center(entity.get_location()))
+        # print(self.term.center(direction))
+        # print(self.term.center({True: "Space vacant", False: "Space not vacant"}[space_vacancy]))
         if x_translated in range(0, 11) and y_translated in range(0, 11):
             tile_vacancy = self.tiles[y_translated][x_translated] in ["  ", "//"]
-            print(self.term.center({True: "Tile vacant", False: "Tile not vacant"}[tile_vacancy]))
+            # print(self.term.center({True: "Tile vacant", False: "Tile not vacant"}[tile_vacancy]))
         else:
             tile_vacancy = False
-            print(self.term.center("Tile out of range"))
+            # print(self.term.center("Tile out of range"))
         if tile_vacancy and space_vacancy:
             entity.update_location(x_translated, y_translated)
             return True
@@ -451,12 +473,7 @@ class NPC(Entity):
         super().__init__(x_location, y_location)
         super().get_location()
         super().update_location()
-        self.representation = self.object_representation_json["NPC"]
-
-    def ask_question(self) -> bool:
-        """Asks a question"""
-        print("Takeover")
-        return (True or False)
+        self.representation = random.choice(self.object_representation_json["NPC"])
 
 
 #        self.riddle = Riddle()
