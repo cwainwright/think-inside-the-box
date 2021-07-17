@@ -25,7 +25,7 @@ class OverWorld(GameSection):
 
     def __init__(self, in_queue: Queue):
         super().__init__(in_queue)
-        world_maze = maze.generate(3, 3)
+        world_maze = maze.generate(10, 10)
         self.world = World(world_maze)
         self.npc = None
 
