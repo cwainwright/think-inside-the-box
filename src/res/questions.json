@@ -133,7 +133,7 @@
   },
   {
     "id": "monty_python",
-    "prompt": "What is the airspeed velocity of an unladen swallow?"
+    "prompt": "What is the airspeed velocity of an unladen swallow?",
     "choices": [
       "50 mph",
       "I don't know",
