@@ -51,6 +51,7 @@ class Question(GameSection):
         self.state = QuestionScreenState.INITIAL
         self.question = self._pick_question(start_data)
         self.selected_index = 0
+        return False
 
     def run_processing(self, inp: Optional[Keystroke]) -> bool:
         """Inherit"""
@@ -120,7 +121,8 @@ class Question(GameSection):
         self.state = QuestionScreenState.USER_SELECTION
         self._redraw(terminal, echo)
 
-    def _draw_question_mark(self, terminal: Terminal, echo: Callable[[str], None]) -> None:
+    @staticmethod
+    def _draw_question_mark(terminal: Terminal, echo: Callable[[str], None]) -> None:
         figlet = Figlet(font='doh', justify='right', width=terminal.width)
         render = figlet.renderText("?")
         cleaned = "\n".join(line for line in render.split("\n") if not line.isspace())
