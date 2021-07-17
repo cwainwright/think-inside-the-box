@@ -1,7 +1,6 @@
 '''Experimental script for testing game_objects in a visual environment'''
 from blessed import Terminal
-from game_objects import World, NPC, Player
-from random import choice
+from game_objects import World, Player
 
 maze_matrix_test = [
     [False, False, False, False, False, False, False, False, True,  False],
@@ -19,14 +18,9 @@ maze_matrix_test = [
 #Initial Room
 term = Terminal()
 world = World(maze_matrix_test, term)
-for line in world.world_matrix:
-    display_room_line = []
-    for item in line:
-        display_room_line.append(str(item))
-    print(display_room_line)
-world.active_room.add_entity("player", Player(5, 1))
-room_directions = {"up":(-1, 0),"left":(0, -1),"down":(1, 0),"right":(0, 1)}
-player_directions = {"up":(5, 9),"left":(9, 5),"down":(5, 1),"right":(1, 5)}
+world.active_room.add_entity("player", Player(5, 2))
+room_directions = {"up":(-1, 0),"right":(0, 1),"down":(1, 0),"left":(0, -1)}
+player_directions = {"up":(5, 9),"right":(1, 5),"down":(5, 1),"left":(9, 5)}
 not_end = True
 while not_end:
     room_bearing, player = world.active_room.display()
@@ -40,7 +34,4 @@ while not_end:
     print(world.active_room)
     world.active_room.add_entity("player", player)
     world.active_room.entity_dict["player"].update_location(player_x, player_y)
-    placements = choice([(5, 1), (9, 5), (5, 9), (1, 5)])
-    world.active_room.add_entity(
-        "Enemy"+str(placements), NPC(placements[0], placements[1])
-    )
+print("Congratulations: you successfully made it through the maze!")
