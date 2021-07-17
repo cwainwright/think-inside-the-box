@@ -5,7 +5,7 @@ from pathlib import Path
 from queue import Queue
 from random import choice
 from string import ascii_uppercase
-from typing import Optional
+from typing import Callable, Optional
 
 from blessed import Terminal
 from blessed.keyboard import Keystroke
@@ -19,11 +19,15 @@ QUESTION_PATH = Path(__file__).parent / '..' / 'res/questions.json'
 TYPING_SPEED = 40
 echo = partial(print, end='', flush=True)
 
-# A padding unit corresponds to 1/16th of the terminal width
-get_padding_unit = lambda terminal: terminal.width // 16
+
+def get_padding_unit(terminal: Terminal) -> int:
+    """Gets a padding unit corresponding to 1/16th of the terminal width"""
+    return terminal.width // 16
 
 
 class QuestionScreenState(IntEnum):
+    """The possible states the Question screen can be in"""
+
     INITIAL = 0
     WRITING_QUESTION = 1
     USER_SELECTION = 2
@@ -31,6 +35,8 @@ class QuestionScreenState(IntEnum):
 
 
 class Question(GameSection):
+    """The question screen section of the game"""
+
     def __init__(self, in_queue: Queue):
         super().__init__(in_queue)
         self.questions_list = question.get_all_questions(QUESTION_PATH)
@@ -42,18 +48,22 @@ class Question(GameSection):
         self.selected_index: int = None
         self.return_value: bool = None
 
-    def handle_start(self, start_data: object):
+    def handle_start(self, start_data: object) -> bool:
+        """Inherit"""
         self.state = QuestionScreenState.INITIAL
         self.question = self._pick_question(start_data)
         self.selected_index = 0
 
-    def run_processing(self,  inp: Optional[Keystroke]) -> bool:
+    def run_processing(self, inp: Optional[Keystroke]) -> bool:
+        """Inherit"""
         if self.state == QuestionScreenState.INITIAL:
             # Start writing the question to the screen
             self.state = QuestionScreenState.WRITING_QUESTION
             return True
 
-        if not inp: return False
+        if not inp:
+            return False
+
         if inp.name == 'KEY_UP' and self.selected_index > 0:
             self.selected_index -= 1
             return True
@@ -68,7 +78,8 @@ class Question(GameSection):
 
         return False
 
-    def run_rendering(self, terminal: Terminal, _echo):
+    def run_rendering(self, terminal: Terminal, _echo: Callable[[str], None]) -> None:
+        """Inherit"""
         if self.state == QuestionScreenState.WRITING_QUESTION:
             return self._write_question(terminal)
 
@@ -78,10 +89,11 @@ class Question(GameSection):
             return self._write_answer(terminal)
 
     def handle_stop(self) -> object:
+        """Inherit"""
         return self.return_value
 
     # Member Functions
-    def _write_question(self, terminal):
+    def _write_question(self, terminal: Terminal) -> None:
         padding_unit = get_padding_unit(terminal)
         self._draw_question_mark(terminal)
 
@@ -99,18 +111,18 @@ class Question(GameSection):
         # so we assume the question is only 1 line long
         self.start_y = (terminal.height // 4) + 2
 
-        for i, choice in enumerate(self.question.choices):
+        for i, choice_ in enumerate(self.question.choices):
             echo(terminal.move_x(padding_unit * 2) + terminal.move_down(1))
             echo((
                 f"{terminal.bold_cyan}{ascii_uppercase[i]}."
-                f" {terminal.normal + terminal.lawngreen}{choice}"
+                f" {terminal.normal + terminal.lawngreen}{choice_}"
             ))
             time.sleep(0.75)
 
         self.state = QuestionScreenState.USER_SELECTION
         self._redraw(terminal)
 
-    def _draw_question_mark(self, terminal):
+    def _draw_question_mark(self, terminal: Terminal) -> None:
         figlet = Figlet(font='doh', justify='right', width=terminal.width)
         render = figlet.renderText("?")
         cleaned = "\n".join(line for line in render.split("\n") if not line.isspace())
@@ -122,8 +134,8 @@ class Question(GameSection):
             + cleaned
             + terminal.normal
         )
-    
-    def _write_answer(self, terminal):
+
+    def _write_answer(self, terminal: Terminal) -> None:
         correct = self.question.is_index_correct(self.selected_index)
         if correct:
             self._write_footer(terminal, terminal.white + "▶" + terminal.bold_green + "  CORRECT!!")
@@ -135,7 +147,7 @@ class Question(GameSection):
         echo(terminal.normal)
         self.stop()
 
-    def _pick_question(self, data):
+    def _pick_question(self, data: object) -> question.Question:
         # if data is a string, pick a question that matches .startswith()
         if type(data) == str:
             return choice(q for q in self.questions_list if q.id.startswith(data))
@@ -143,22 +155,23 @@ class Question(GameSection):
         # Otherwise, return a random non-special question
         return choice(q for q in self.questions_list if not q.id.startswith('special-'))
 
-    def _redraw(self, terminal):
+    def _redraw(self, terminal: Terminal) -> None:
         # Redraw the questions (A different one might be selected)
         echo(terminal.move_y(self.start_y))
         padding_unit = get_padding_unit(terminal)
 
-        for i, choice in enumerate(self.question.choices):
+        for i, choice_ in enumerate(self.question.choices):
             selected = self.selected_index == i
             echo(terminal.move_x(padding_unit * 2) + terminal.move_down(1))
-            echo((
-                f"{terminal.reverse if selected else ''}"
-                f"{terminal.bold_cyan}{ascii_uppercase[i]}."
-                f" {(terminal.normal + terminal.lawngreen) if self.state == QuestionScreenState.USER_SELECTION or not selected else ''}"
-                f"{choice}{terminal.normal}"
-            ))
+            echo(f"{terminal.reverse if selected else ''}")
+            echo(f"{terminal.bold_cyan}{ascii_uppercase[i]}.")
 
-    def _write_footer(self, terminal, text: str):
+            in_selection_state_or_not_selected = self.state == QuestionScreenState.USER_SELECTION or not selected
+            echo(f" {(terminal.normal + terminal.lawngreen) if in_selection_state_or_not_selected else ''}")
+
+            echo(f"{choice_}{terminal.normal}")
+
+    def _write_footer(self, terminal: Terminal, text: str) -> None:
         padding_unit = get_padding_unit(terminal)
         echo(
             terminal.move_xy(padding_unit, self.start_y)
