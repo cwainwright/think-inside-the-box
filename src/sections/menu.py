@@ -7,6 +7,7 @@ from blessed.keyboard import Keystroke
 
 from src.commands import ChangeSection, EndGame
 from src.sections.base import GameSection
+from src.sections.over_world import StartOverWorld
 
 
 class MenuType:
@@ -54,7 +55,7 @@ class StartMenuBehaviour:
     def next_command(self, index: int, character: str) -> object:
         """Processes the next command after selection"""
         if index == 0:
-            return ChangeSection('over_world', object())
+            return ChangeSection('over_world', StartOverWorld(character, True))
 
         if index == 1:
             return ChangeSection('menu', CharacterMenuType(character))
