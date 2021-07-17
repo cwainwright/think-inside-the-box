@@ -6,7 +6,7 @@ from blessed import Terminal
 from src.sections.debug import Debug
 from src.sections.menu import Menu, StartMenuType
 from src.sections.over_world import OverWorld
-from src.sections.question import Question
+from src.sections.question import NewQuestion, Question
 
 
 class DummyGameManager(ABC):
@@ -54,4 +54,4 @@ class DummyQuestionManager(DummyGameManager):
     """Dummy manager for the question screen"""
 
     section_class = Question
-    start_data = None
+    start_data = NewQuestion()
