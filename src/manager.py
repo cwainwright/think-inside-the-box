@@ -25,6 +25,9 @@ class GameManager:
         data = StartGame()
 
         while not isinstance(data, EndGame):
+            print(self.terminal.move_xy(0, 0))
+            print(self.terminal.clear)
+
             data = active(self.terminal, data)
 
             if isinstance(data, ChangeSection):

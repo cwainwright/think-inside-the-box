@@ -5,7 +5,7 @@ from blessed import Terminal
 
 from src.sections.debug import Debug
 from src.sections.menu import Menu, StartMenuType
-from src.sections.over_world import OverWorld
+from src.sections.over_world import OverWorld, StartOverWorld
 from src.sections.question import NewQuestion, Question
 
 
@@ -47,7 +47,7 @@ class DummyOverWorldManager(DummyGameManager):
     """Dummy manager for the over world"""
 
     section_class = OverWorld
-    start_data = None
+    start_data = StartOverWorld('😎', True)
 
 
 class DummyQuestionManager(DummyGameManager):
