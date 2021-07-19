@@ -101,7 +101,7 @@ To interact with an NPC use the Tab key. This will open the [question screen](#Q
 
 ### Question Screen
 
-*** 
+***
 
 ![question-screen](images/question-screen.png "Question-Screen")
 
