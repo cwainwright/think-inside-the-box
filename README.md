@@ -77,7 +77,7 @@ After you enter a choice it will return you to the main menu to allow you to pla
 
 This option will quit the game.
 
-**Note:** *You can also use the Ctrl+C short-cut to exit the game at any point.*
+**Note:** *You can also use the Ctrl+C shortcut to exit the game at any point.*
 
 ### Game World
 
