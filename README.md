@@ -2,7 +2,6 @@
 
 ## Getting started
 
-
 ![setting-started](images/getting-started.gif "Getting Started")
 
 ### Install the Poetry Package Manager
@@ -80,7 +79,7 @@ Rooms can be navigated using the **Arrow Keys (Up, Down, Left and Right)**.
 
 #### NPC Interaction
 
-To interact with an NPC use the Tab key. This will open the [question screen](#Question-Screen).
+To interact with an NPC use the Tab key. This will open the [question screen](#question-screen).
 
 ### Question Screen
 
