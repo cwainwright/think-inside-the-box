@@ -32,8 +32,6 @@ Now you will able to start the game by using the following command:
 
 ## Application Overview
 
-***
-
 ### Start Menu
 
 ***
