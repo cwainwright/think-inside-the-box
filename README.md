@@ -71,7 +71,7 @@ The game world is a maze built procedurally each time the game is run by tessell
 
 #### Room Navigation
 
-Rooms are made up of 11 by 11 tiles. These tiles can be one of 3 things: A space ``(displayed as '  ' in a room)``, a wall ``('##')`` or a door ``('//')``.
+Rooms are made up of 11 by 11 tiles. These tiles can be one of 3 things: A space ``('  ')``, a wall ``('##')`` or a door ``('//')``.
 Spaces and doors act in a similar manner; they allow entities to pass through/over them.
 Walls prevent players and NPCs from moving over them.
 To enter an adjacent room, the player must land on a door at one of the edges of a room.
