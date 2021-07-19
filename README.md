@@ -16,7 +16,7 @@ To run the game first install the [Poetry package manager](https://python-poetry
 
 ***
 
-Clone or [Download](https://github.com/Mature-Magpies/think-inside-the-box/archive/refs/heads/main.zip) this repository and navigate to the repository's root directory to install the game's dependant packages with poetry with the following command:
+Clone or [Download](https://github.com/Mature-Magpies/think-inside-the-box/archive/refs/heads/main.zip) this repository and navigate to the it's root directory to install the game's dependant packages with poetry with the following command:
 
 ```poetry install```
 
@@ -47,33 +47,19 @@ You can interact with the menu options by either entering the **corresponding nu
 
 The Start Menu is the first screen in the game, It gives three options:
 
- 1. Play
- 2. Character Select
- 3. Quit
-
-#### Play Option
+#### 1. Play Option
 
 This option allows you to play, if you don’t select a different emoji character it will use the default which is 🙂.
 
-#### Character Select Option
-
-![character-select](images/character-select.png "Character Select")
+#### 2. Character Select Option
 
 This option brings you into another menu to choose a character from a list of 9 emojis:
 
- 1. 🙂
- 2. 😄
- 3. 😐
- 4. 🤔
- 5. 🙁
- 6. 😎
- 7. 🙃
- 8. 😂
- 9. 😭
+![character-select](images/character-select.png "Character Select")
 
 After you enter a choice it will return you to the main menu to allow you to play with the selected character.
 
-#### Quit Option
+#### 3. Quit Option
 
 This option will quit the game.
 
@@ -85,7 +71,7 @@ This option will quit the game.
 
 ![game-world](images/game-world.png "Game World")
 
-The game world is a maze built procedurally each time the game is run by tessellating prebuilt rooms. The player must make their way from the top room of the maze to the bottom; navigating the rooms and interacting with the None Player Characters (NPCs).
+The game world is a maze built procedurally each time the game is run by tessellating prebuilt rooms. The player must make their way from the top room of the maze to the bottom; navigating the rooms and interacting with the Non-Player Characters (NPCs).
 
 #### Room Navigation
 
