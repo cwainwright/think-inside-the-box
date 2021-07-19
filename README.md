@@ -1,182 +1,165 @@
-# Python Discord Code Jam Repository Template
+# Think Inside The Box
 
-## A Primer
-Hello code jam participants! We've put together this repository template for you to use in [our code jams](https://pythondiscord.com/events/) or even other Python events!
+## Getting started
 
-This document will contain the following information:
-1. [What does this template contain?](#what-does-this-template-contain)
-2. [How do I use it?](#how-do-i-use-it)
-3. [How do I adapt it to my project?](#how-do-i-adapt-it-to-my-project)
+***
 
-You can also look at [our style guide](https://pythondiscord.com/events/code-jams/code-style-guide/) to get more information about what we consider a maintainable code style.
+![setting-started](images/getting-started.gif "Getting Started")
 
-## What does this template contain?
+### Install the Poetry Package Manager
 
-Here is a quick rundown of what each file in this repository contains:
-- `LICENSE`: [The MIT License](https://opensource.org/licenses/MIT), an OSS approved license which grants rights to everyone to use and modify your projects and limits your liability. We highly recommend you to read the license.
-- `.gitignore`: A list of files that will be ignored by Git. Most of them are auto-generated or contain data that you wouldn't want to share publicly.
-- `dev-requirements.txt`: Every PyPI packages used for the project's development, to ensure a common and maintainable code style. [More on that below](#using-the-default-pip-setup).
-- `tox.ini`: The configurations of two of our style tools: [`flake8`](https://pypi.org/project/flake8/) and [`isort`](https://pypi.org/project/isort/).
-- `.pre-commit-config.yaml`: The configuration of the [`pre-commit`](https://pypi.org/project/pre-commit/) tool.
-- `.github/workflows/lint.yaml`: A [GitHub Actions](https://github.com/features/actions) workflow, a set of actions run by GitHub on their server after each push, to ensure the style requirements are met.
+***
 
-Each of these files have comments for you to understand easily, and modify to fit your needs.
+To run the game first install the [Poetry package manager](https://python-poetry.org/docs/) to automatically manage dependant packages.
 
-### flake8: general style rules
+### Clone/Download the repository
 
-Our first and probably most important tool is flake8. It will run a set of plugins on your codebase and warn you about any non-conforming lines.
-Here is a sample output:
-```
-~> flake8
-./app.py:1:1: D100 Missing docstring in public module
-./app.py:1:6: N802 function name 'helloWorld' should be lowercase
-./app.py:1:16: E201 whitespace after '('
-./app.py:1:17: ANN001 Missing type annotation for function argument 'name'
-./app.py:1:23: ANN201 Missing return type annotation for public function
-./app.py:2:1: D400 First line should end with a period
-./app.py:2:1: D403 First word of the first line should be properly capitalized
-./app.py:3:19: E225 missing whitespace around operator
-```
+***
 
-Each line corresponds to an error. The first part is the file path, then the line number, and the column index.
-Then comes the error code, a unique identifier of the error, and then a human-readable message.
+Clone or [Download](https://github.com/Mature-Magpies/think-inside-the-box/archive/refs/heads/main.zip) this repository and navigate to the repository's root directory to install the game's dependant packages with poetry with the following command:
 
-If, for any reason, you do not wish to comply with this specific error on a specific line, you can add `# noqa: CODE` at the end of the line.
-For example:
-```python
-def helloWorld():  # noqa: N802
-    ...
-```
-will pass linting. Although we do not recommend ignoring errors unless you have a good reason to do so.
+```poetry install```
 
-It is run by calling `flake8` in the project root.
+### Running the game
 
-#### Plugin List:
+***
 
-- `flake8-annotations`: Checks your code for the presence of [type-hints](https://docs.python.org/3/library/typing.html).
-- `flake8-bandit`: Checks for common security breaches.
-- `flake8-docstring`: Checks that you properly documented your code.
-- `flake8-isort`: Makes sure you ran ISort on the project.
+Now you will able to start the game by using the following command:
 
-### ISort: automatic import sorting
+```poetry run python main.py```
 
-This second tool will sort your imports according to the [PEP8](https://www.python.org/dev/peps/pep-0008/#imports). That's it! One less thing for you to do!
+**Note for Windows users:**
+*Command Prompt does not render the game properly, please use PowerShell or similar Command Line Interface instead*
 
-It is run by calling `isort .` in the project root. Notice the dot at the end, it tells ISort to use the current directory.
+## Application Overview
 
-### Pre-commit: run linting before committing
+***
 
-This third tool doesn't check your code, but rather makes sure that you actually *do* check it.
+### Start Menu
 
-It makes use of a feature called [Git hooks](https://git-scm.com/book/en/v2/Customizing-Git-Git-Hooks) which allow you to run a piece of code before running `git commit`.
-The good thing about it is that it will cancel your commit if the lint doesn't pass. You won't have to wait for Github Actions to report and have a second fix commit.
+***
 
-It is *installed* by running `pre-commit install` and can be run manually by calling only `pre-commit`.
+![start-menu](images/start-menu.png "Start Menu")
 
-[Lint before you push!](https://soundcloud.com/lemonsaurusrex/lint-before-you-push)
+#### Menu Interaction
 
-#### Hooks List:
+You can interact with the menu options by either entering the **corresponding number** beside the menu option you want to select or use the **Arrow/WASD keys** to move the highlighted selector to the option you want to select and press enter to select it.
 
-- `check-toml`: Lints and corrects your TOML files.
-- `check-yaml`: Lints and corrects your YAML files.
-- `end-of-file-fixer`: Makes sure you always have an empty line at the end of your file.
-- `trailing-whitespaces`: Removes whitespaces at the end of each line.
-- `python-check-blanket-noqa`: Forbids you from using noqas on large pieces of code.
-- `isort`: Runs ISort.
-- `flake8`: Runs flake8.
+The Start Menu is the first screen in the game, It gives three options:
 
-## How do I use it?
+ 1. Play
+ 2. Character Select
+ 3. Quit
 
-### Creating your Team Repository
+#### Play Option
 
-One person in the team, preferably the leader, will have to create the repository and add other members as collaborators.
+This option allows you to play, if you don’t select a different emoji character it will use the default which is 🙂.
 
-1. In the top right corner of your screen, where **Clone** usually is, you have a **Use this template** button to click.
+#### Character Select Option
 
-![](https://docs.github.com/assets/images/help/repository/use-this-template-button.png)
+![character-select](images/character-select.png "Character Select")
 
-2. Give the repository a name and a description.
+This option brings you into another menu to choose a character from a list of 9 emojis:
 
-![](https://docs.github.com/assets/images/help/repository/create-repository-name.png)
+ 1. 🙂
+ 2. 😄
+ 3. 😐
+ 4. 🤔
+ 5. 🙁
+ 6. 😎
+ 7. 🙃
+ 8. 😂
+ 9. 😭
 
-3. Click **Create repository from template**.
+After you enter a choice it will return you to the main menu to allow you to play with the selected character.
 
-4. Click **Settings** in your newly created repository.
+#### Quit Option
 
-![](https://docs.github.com/assets/images/help/repository/repo-actions-settings.png)
+This option will quit the game.
 
-5. Select **Manage access**.
+**Note:** *You can also use the Ctrl+C short-cut to exit the game at any point.*
 
-<!-- Yes, this is inline html. The source image is too vertical to be displayed with 100% width. -->
-<img src="https://docs.github.com/assets/images/help/repository/manage-access-tab.png" style="width: 30%"></img>
+### Game World
 
-6. Click **Invite a collaborator**.
+***
 
-![](https://docs.github.com/assets/images/help/repository/invite-a-collaborator-button.png)
+![game-world](images/game-world.png "Game World")
 
-7. Insert the names of each of your teammates, and invite them. Once they have accepted the invitation in their email, they will have write access to the repository.
+The game world is a maze built procedurally each time the game is run by tessellating prebuilt rooms. The player must make their way from the top room of the maze to the bottom; navigating the rooms and interacting with the None Player Characters (NPCs).
 
-You are now ready to go! Now sit down, relax, and wait for the kickstart!
-Don't forget to swap "Python Discord" in the `LICENSE` file for the name of each of your team members or the name of your team after the start of the jam.
+#### Room Navigation
 
-### Using the Default Pip Setup
+Rooms are made up of 11 by 11 tiles. These tiles can be one of 3 things: A space ``(displayed as '  ' in a room)``, a wall ``('##')`` or a door ``('//')``.
+Spaces and doors act in a similar manner; they allow entities to pass through/over them.
+Walls prevent players and NPCs from moving over them.
+To enter an adjacent room, the player must land on a door at one of the edges of a room.
+Rooms can be navigated using the **Arrow Keys (Up, Down, Left and Right)**.
 
-Our default setup includes a bare requirement file to be used with a [virtual environment](https://docs.python.org/3/library/venv.html).
+#### NPC Interaction
 
-We recommend this if you never have used any other dependency manager, although if you have, feel free to switch to it. More on that below.
+To interact with an NPC use the Tab key. This will open the [question screen](#Question-Screen).
 
-#### Creating the environment
-Create a virtual environment in the folder `.venv`.
-```shell
-$ python -m venv .venv
-```
+### Question Screen
 
-#### Enter the environment
-It will change based on your operating system and shell.
-```shell
-# Linux, Bash
-$ source .venv/bin/activate
-# Linux, Fish
-$ source .venv/bin/activate.fish
-# Linux, Csh
-$ source .venv/bin/activate.csh
-# Linux, PowerShell Core
-$ .venv/bin/Activate.ps1
-# Windows, cmd.exe
-> .venv\Scripts\activate.bat
-# Windows, PowerShell
-> .venv\Scripts\Activate.ps1
+***
+
+![question-screen](images/question-screen.png "Question-Screen")
+
+## Altering Game Files
+
+***
+
+### Adding or Changing Room Layouts
+
+***
+
+Additional Room layouts can be added by editing the room_templates.json file located in the src/GameObjects directory.
+
+Room layouts are organised into 5 main categories:
+
+1. dead-end: Room has only one entrance and exit.
+2. straight: Room has two exits - each at opposite edges of the room.
+3. corner: Room has two exits - exits are adjacent to one another.
+4. 3-way-junction: Room has 3 exits.
+5. 4-way-junction: Room has 4 exits.
+
+Style guide: Room entrances follow a standard layout of priority for their entrances:
+
+- The use of non-aesthetic doors must correspond to the category in which the room was placed.
+- First entrance without a entrance adjacent anticlockwise is placed at the top.
+- All subsequent entrances are then placed around the sides in a clockwise fashion. *Exceptions to this rule are*:
+  - straight: entrances are opposite and therefore fully reversible.
+  - 4-way-junction: has all 4 entrances and therefore no default orientation.
+
+While doors can be placed on any space in the grid, it is recommended that non-aesthetic doors along the edges of rooms remain centred (for consistency).
+
+Rooms are stored in the following format:
+
+```json
+{
+    "name":"room_name",
+    "Layout": ["<2D array of 11×11 size>"]
+}
 ```
 
-#### Installing the Dependencies
-Once the environment is created and activated, use this command to install the development dependencies.
-```shell
-$ pip install -r dev-requirements.txt
-```
+For playability, corridors along the edges of rooms must have double-space width to prevent NPC characters from blocking the way.
+In addition, entrances must have an empty space of at least 3×2 in front (to prevent edge cases where after entering, the player gets trapped in a corner by the NPC)
 
-#### Exiting the environment
-Interestingly enough, it is the same for every platform
-```shell
-$ deactivate
-```
+### Adding or Changing Questions
 
-Once the environment is activated, all the commands listed previously should work. We highly recommend that you run `pre-commit install` as soon as possible.
+***
 
-## How do I adapt it to my project?
+Additional Questions can be added by editing the questions.json file located in the src/res directory.
 
-If you wish to use Pipenv or Poetry, you will have to move the dependencies in `dev-requirements.txt` to the development dependencies of your tool.
+Each question is represented as a dictionary with the following keys:
+ - `id`: A unique string to identify the question within the engine (for example, we can filter out math questions by looking for the 'math-' prefix in their ID.)
+ - Brb (TODO)
 
-We've included a porting of `dev-requirements.txt` to both [poetry](./samples/pyproject.toml) and [pipenv](./samples/Pipfile) in the [samples folder](./samples).
-If you use the poetry setup, make sure to change the project name, description, and authors at the top of the file.
+### Changing Object Representation
 
-When installing new dependencies, don't forget to [pin them](https://pip.pypa.io/en/stable/user_guide/#pinned-version-numbers) by adding a version tag at the end.
-For example, if I wish to install `Click`, a quick look at [PyPI](https://pypi.org/project/click/) tells me that 8.0.1 is the latest version.
-I will then add `click ~= 8.0`, without the last number, to my dependency manager.
+***
 
-A code jam project is left unmaintained after the end of the event. If the dependencies aren't pinned, the project will break after the first major change in an API.
-
-## Final words
-
-Don't forget to replace this README with an actual description of your project! Images are also welcome!
-
-We hope this template will be helpful. Good luck in the jam!
+The game can be 're-skinned' through the editing of the object_representation.json in the src/GameObjects directory. All but the player character can be re-skinned (the player can now be customised through the in-game menu at the start of the game).
+All objects must have a width of two unicode characters.
+The door object has two states: unlocked and locked, hence it has two representations in the json file - unlocked first, locked second.
+NPC character representations are randomly selected at initialisation from the NPC array.
