@@ -2,7 +2,6 @@
 
 ## Getting started
 
-***
 
 ![setting-started](images/getting-started.gif "Getting Started")
 
@@ -43,13 +42,13 @@ Now you will able to start the game by using the following command:
 
 #### Menu Interaction
 
-You can interact with the menu options by either entering the **corresponding number** beside the menu option you want to select or use the **Arrow/WASD keys** to move the highlighted selector to the option you want to select and press enter to select it.
+You can interact with the menu options by either entering the **menu number** or use the **Arrow/WASD keys** to move the highlighted selector and press enter to select.
 
 The Start Menu is the first screen in the game, It gives three options:
 
 #### 1. Play Option
 
-This option allows you to play, if you don’t select a different emoji character it will use the default which is 🙂.
+This option allows you to play, if you don’t [select a character](#2-character-select-option) it will use the default which is 🙂.
 
 #### 2. Character Select Option
 
@@ -92,8 +91,6 @@ To interact with an NPC use the Tab key. This will open the [question screen](#Q
 ![question-screen](images/question-screen.png "Question-Screen")
 
 ## Altering Game Files
-
-***
 
 ### Adding or Changing Room Layouts
 
