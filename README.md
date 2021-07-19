@@ -101,9 +101,14 @@ To interact with an NPC use the Tab key. This will open the [question screen](#Q
 
 ### Question Screen
 
-***
+*** 
 
 ![question-screen](images/question-screen.png "Question-Screen")
+
+During an encounter with an NPC, you will be presented with a randomly selected question. \
+Use the **Arrow Keys (Up and Down)** to select your answer and press **Enter** to confirm. \
+If you answered correctly, congratulations! The NPC will move out of the way to let you progress in the [overworld](#Game-World). \
+However, if your answer is incorrect, you will be sent back to the beginning of the dungeon!
 
 ## Altering Game Files
 
@@ -149,11 +154,26 @@ In addition, entrances must have an empty space of at least 3×2 in front (to pr
 
 ***
 
-Additional Questions can be added by editing the questions.json file located in the src/res directory.
+Additional Questions can be added by editing the `questions.json` file located in the *src/res* directory.
 
 Each question is represented as a dictionary with the following keys:
  - `id`: A unique string to identify the question within the engine (for example, we can filter out math questions by looking for the 'math-' prefix in their ID.)
- - Brb (TODO)
+ - `prompt`: The question's prompt, i.e. the question that the player will have to answer.
+ - `choices`: A list of possible options. Technically, you could add up to 26 different options (one for each letter in the alphabet).
+ - `correct`: The index of the correct answer in the choices list, starting at 0.
+
+```json
+{
+    "id": "readme-demo",
+    "prompt": "Did you understand how questions work?",
+    "choices": [
+      "No",
+      "Yes",
+      "Perhaps"
+    ],
+    "correct": 1
+}
+```
 
 ### Changing Object Representation
 
