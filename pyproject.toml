@@ -1,8 +1,8 @@
 [tool.poetry]
-name = "Name"
+name = "Think Inside The Box"
 version = "0.1.0"
-description = ""
-authors = ["Author 1 <email@mail.com>"]
+description = "A humble terminal maze game with NPCs and seemingly *obvious* questions."
+authors = ["Alan O'Regan", "Condar", "cwainwright", "Geekid", "tooboredtocode(albedo)"]
 license = "MIT"
 
 [tool.poetry.dependencies]
