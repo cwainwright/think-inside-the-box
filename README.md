@@ -1,5 +1,14 @@
 # Think Inside The Box
 
+## Introduction
+
+Hi, Welcome to **Think Inside the Box**, a humble terminal **maze game** with NPCs and seemingly *obvious* questions. \
+This was made with fun by the Mature-Magpies team in the [python discord](https://pythondiscord.com/) [code jam 8](https://pythondiscord.com/events/code-jams/8/), \
+This game was programmed in python with the [blessed](https://github.com/jquast/blessed) text user interface framework.
+
+We hope you have fun playing our game,
+The Mature Magpies team.
+
 ## Getting started
 
 ![setting-started](images/getting-started.gif "Getting Started")
@@ -29,7 +38,7 @@ Now you will able to start the game by using the following command:
 **Note for Windows users:**
 *Command Prompt does not render the game properly, please use PowerShell or similar Command Line Interface instead*
 
-## Application Overview
+## Gameplay Overview
 
 ### Start Menu
 
@@ -67,14 +76,20 @@ This option will quit the game.
 
 ![game-world](images/game-world.png "Game World")
 
-The game world is a maze built procedurally each time the game is run by tessellating prebuilt rooms. The player must make their way from the top room of the maze to the bottom; navigating the rooms and interacting with the Non-Player Characters (NPCs).
+The game world is a maze built procedurally each time the game is run by tessellating prebuilt rooms. \
+The player must make their way from the top room of the maze to the bottom; navigating the rooms and interacting with the Non-Player Characters (NPCs).
 
 #### Room Navigation
 
-Rooms are made up of 11 by 11 tiles. These tiles can be one of 3 things: A space ``('  ')``, a wall ``('##')`` or a door ``('//')``.
-Spaces and doors act in a similar manner; they allow entities to pass through/over them.
-Walls prevent players and NPCs from moving over them.
-To enter an adjacent room, the player must land on a door at one of the edges of a room.
+Rooms are made up of 11 by 11 tiles. These tiles can be one of 3 things:
+
+- A space ``('  ')``
+- A wall ``('##')``
+- A door ``('//')``
+
+Spaces and doors act in a similar manner; they allow entities to pass through/over them. \
+Walls prevent players and NPCs from moving over them. \
+To enter an adjacent room, the player must move through a door at one of the edges of a room. \
 Rooms can be navigated using the **Arrow Keys (Up, Down, Left and Right)**.
 
 #### NPC Interaction
@@ -102,13 +117,15 @@ Additional Room layouts can be added by editing the room_templates.json file loc
 
 Room layouts are organised into 5 main categories:
 
-1. dead-end: Room has only one entrance and exit.
-2. straight: Room has two exits - each at opposite edges of the room.
-3. corner: Room has two exits - exits are adjacent to one another.
-4. 3-way-junction: Room has 3 exits.
-5. 4-way-junction: Room has 4 exits.
+1. **dead-end:** Room has only one entrance and exit.
+2. **straight:** Room has two exits - each at opposite edges of the room.
+3. **corner:** Room has two exits - exits are adjacent to one another.
+4. **3-way-junction:** Room has 3 exits.
+5. **4-way-junction:** Room has 4 exits.
 
-Style guide: Room entrances follow a standard layout of priority for their entrances:
+#### Style guide
+
+Room entrances follow a standard layout of priority for their entrances:
 
 - The use of non-aesthetic doors must correspond to the category in which the room was placed.
 - First entrance without a entrance adjacent anticlockwise is placed at the top.
@@ -128,7 +145,7 @@ Rooms are stored in the following format:
 ```
 
 For playability, corridors along the edges of rooms must have double-space width to prevent NPC characters from blocking the way.
-In addition, entrances must have an empty space of at least 3×2 in front (to prevent edge cases where after entering, the player gets trapped in a corner by the NPC)
+In addition, entrances must have an empty space of at least 3×2 in front (to prevent edge cases where after entering, the player gets trapped in a corner by the NPC).
 
 ### Adding or Changing Questions
 
@@ -137,10 +154,11 @@ In addition, entrances must have an empty space of at least 3×2 in front (to pr
 Additional Questions can be added by editing the `questions.json` file located in the *src/res* directory.
 
 Each question is represented as a dictionary with the following keys:
- - `id`: A unique string to identify the question within the engine (for example, we can filter out math questions by looking for the 'math-' prefix in their ID.)
- - `prompt`: The question's prompt, i.e. the question that the player will have to answer.
- - `choices`: A list of possible options. Technically, you could add up to 26 different options (one for each letter in the alphabet).
- - `correct`: The index of the correct answer in the choices list, starting at 0.
+
+- `id`: A unique string to identify the question within the engine (for example, we can filter out math questions by looking for the 'math-' prefix in their ID.)
+- `prompt`: The question's prompt, i.e. the question that the player will have to answer.
+- `choices`: A list of possible options. Technically, you could add up to 26 different options (one for each letter in the alphabet).
+- `correct`: The index of the correct answer in the choices list, starting at 0.
 
 ```json
 {
@@ -159,7 +177,8 @@ Each question is represented as a dictionary with the following keys:
 
 ***
 
-The game can be 're-skinned' through the editing of the object_representation.json in the src/GameObjects directory. All but the player character can be re-skinned (the player can now be customised through the in-game menu at the start of the game).
-All objects must have a width of two unicode characters.
-The door object has two states: unlocked and locked, hence it has two representations in the json file - unlocked first, locked second.
+The game can be 're-skinned' through the editing of the object_representation.json in the src/GameObjects directory. \
+All but the player character can be re-skinned (the player can now be customised through the in-game menu at the start of the game). \
+All objects must have a width of two unicode characters. \
+The door object has two states: unlocked and locked, hence it has two representations in the json file - unlocked first, locked second. \
 NPC character representations are randomly selected at initialisation from the NPC array.
