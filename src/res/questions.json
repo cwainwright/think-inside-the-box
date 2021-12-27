@@ -21,7 +21,7 @@
       "Third",
       "I'm out of the race"
     ],
-    "correct": "2"
+    "correct": 2
   },
   {
     "id": "math_2",
@@ -52,7 +52,8 @@
     "choices": [
       "They were in the back of the plane",
       "They were children",
-      "They were a couple"
+      "They were a couple",
+      "They were the pilot and copilot"
     ],
     "correct": 2
   },
@@ -98,7 +99,7 @@
       "The wood",
       "The match"
     ],
-    "correct": "3"
+    "correct": 3
   },
   {
     "id": "something_4",
