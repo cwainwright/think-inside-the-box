@@ -9,7 +9,14 @@ from src.commands import ChangeSection
 from src.GameObjects.game_objects import World
 from src.sections.base import GameSection
 from src.sections.question import NewQuestion, QuestionResult
-from src.util import maze
+
+_DEMO_MAZE = [
+    [False, False, False, True, False],
+    [False, True, False, True, False],
+    [False, True, True, True, False],
+    [False, True, False, True, False],
+    [False, True, False, False, False],
+]
 
 
 @dataclass
@@ -25,7 +32,7 @@ class OverWorld(GameSection):
 
     def __init__(self, in_queue: Queue):
         super().__init__(in_queue)
-        world_maze = maze.generate(10, 10)
+        world_maze = _DEMO_MAZE
         self.world = World(world_maze)
         self.npc = None
 
